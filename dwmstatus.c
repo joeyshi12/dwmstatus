@@ -9,19 +9,19 @@
 void get_cpu(char *buf, size_t size) {
     FILE *file = fopen("/proc/loadavg", "r");
     if (!file) {
-        snprintf(buf, size, "  CPU  ?  ");
+        snprintf(buf, size, "CPU ?");
         return;
     }
     double load;
     fscanf(file, "%lf", &load);
     fclose(file);
-    snprintf(buf, size, "  CPU  %.2f  ", load);
+    snprintf(buf, size, "CPU %.2f", load);
 }
 
 void get_mem(char *buf, size_t size) {
     FILE *file = fopen("/proc/meminfo", "r");
     if (!file) {
-        snprintf(buf, size, "     ?  ");
+        snprintf(buf, size, " ?");
         return;
     }
 
@@ -43,13 +43,13 @@ void get_mem(char *buf, size_t size) {
 
     long used = mem_total - mem_available;
     double used_gb = used / (1024.0 * 1024.0);
-    snprintf(buf, size, "     %.1fG  ", used_gb);
+    snprintf(buf, size, " %.1fG", used_gb);
 }
 
 void get_wlan(char *buf, size_t size) {
     DIR *netdir = opendir("/sys/class/net");
     if (!netdir) {
-        snprintf(buf, size, "  󰤭  Disconnected  ");
+        snprintf(buf, size, "󰤭 Disconnected");
         return;
     }
 
@@ -75,16 +75,16 @@ void get_wlan(char *buf, size_t size) {
     closedir(netdir);
 
     if (connected) {
-        snprintf(buf, size, "  󰤨  Connected  ");
+        snprintf(buf, size, "󰤨 Connected");
     } else {
-        snprintf(buf, size, "  󰤭  Disconnected  ");
+        snprintf(buf, size, "󰤭 Disconnected");
     }
 }
 
 void get_clock(char *buf, size_t size) {
     time_t t = time(NULL);
     struct tm *tm_info = localtime(&t);
-    strftime(buf, size, "  󱑆  %a %b %d %I:%M %p  ", tm_info);
+    strftime(buf, size, "󱑆 %a %b %d %I:%M %p", tm_info);
 }
 
 int main() {
@@ -101,7 +101,7 @@ int main() {
         get_mem(mem, sizeof(mem));
         get_wlan(wlan, sizeof(wlan));
         get_clock(clockbuf, sizeof(clockbuf));
-        snprintf(status, sizeof(status), "%s%s%s%s", cpu, mem, wlan, clockbuf);
+        snprintf(status, sizeof(status), " %s  %s  %s  %s ", cpu, mem, wlan, clockbuf);
 
         // Update root window name
         XStoreName(display, root, status);
