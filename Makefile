@@ -4,7 +4,7 @@ DESTDIR = /usr/local
 
 all: dwmstatus
 
-dwmstatus:
+dwmstatus: dwmstatus.c
 	${CC} -o $@ ${CFLAGS} dwmstatus.c
 
 clean:

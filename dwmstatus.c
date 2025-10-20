@@ -33,8 +33,7 @@ void get_mem(char *buf, size_t size) {
     while (fscanf(file, "%63s %ld %15s\n", label, &value, unit) == 3) {
         if (strcmp(label, "MemTotal:") == 0) {
             mem_total = value;
-        }
-        else if (strcmp(label, "MemAvailable:") == 0) {
+        } else if (strcmp(label, "MemAvailable:") == 0) {
             mem_available = value;
             break;
         }
