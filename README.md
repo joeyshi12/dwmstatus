@@ -15,8 +15,8 @@ Daemon that periodically updates the dwm status bar.
 ## Customization
 
 Each module is a string buffer that is copied onto `status` in the main function of `dwmstatus.c`.
-To add a battery module, find out which folder contains battery information
-(find a folder named `/sys/class/power_supply/BAT0` or `/sys/class/power_supply/BAT1`).
+To add a battery module, find out which folder contains battery information:
+find a folder named `/sys/class/power_supply/BAT0` or `/sys/class/power_supply/BAT1`.
 Then, use the following helper function to format the string for the battery module:
 
 ```c
