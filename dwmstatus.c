@@ -24,12 +24,10 @@ void get_mem(char *buf, size_t size) {
         snprintf(buf, size, " ?");
         return;
     }
-
     long mem_total = 0, mem_available = 0;
     char label[64];
     long value;
     char unit[16];
-
     while (fscanf(file, "%63s %ld %15s\n", label, &value, unit) == 3) {
         if (strcmp(label, "MemTotal:") == 0) {
             mem_total = value;
@@ -39,7 +37,6 @@ void get_mem(char *buf, size_t size) {
         }
     }
     fclose(file);
-
     long used = mem_total - mem_available;
     double used_gb = used / (1024.0 * 1024.0);
     snprintf(buf, size, " %.1fG", used_gb);
@@ -51,7 +48,6 @@ void get_wlan(char *buf, size_t size) {
         snprintf(buf, size, "󰤭 Disconnected");
         return;
     }
-
     struct dirent *ent;
     char path[256];
     char state[32];
@@ -72,7 +68,6 @@ void get_wlan(char *buf, size_t size) {
         break;
     }
     closedir(netdir);
-
     if (connected) {
         snprintf(buf, size, "󰤨 Connected");
     } else {
@@ -93,7 +88,6 @@ int main() {
         fprintf(stderr, "Cannot open display.\n");
         return 1;
     }
-
     Window root = DefaultRootWindow(display);
     while (1) {
         get_cpu(cpu, sizeof(cpu));
@@ -108,7 +102,6 @@ int main() {
 
         sleep(1);
     }
-
     XCloseDisplay(display);
     return 0;
 }
