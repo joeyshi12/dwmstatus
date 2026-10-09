@@ -11,6 +11,11 @@ Daemon that periodically updates the dwm status bar.
     make
     ```
 2. Add `~/.local/src/dwmstatus/dwmstatus &` as an [autostart](https://wiki.archlinux.org/title/Autostarting) command.
+3. For dwl, run it with `-s` to print the status to standard output, one line per second,
+   and pipe it into dwl:
+    ```sh
+    ~/.local/src/dwmstatus/dwmstatus -s | dwl
+    ```
 
 ## Customization
 
