@@ -81,14 +81,30 @@ void get_clock(char *buf, size_t size) {
     strftime(buf, size, "󱑆 %a %b %d %I:%M %p", tm_info);
 }
 
-int main() {
+static void usage(void) {
+    fprintf(stderr, "usage: dwmstatus [-s]\n");
+    exit(1);
+}
+
+int main(int argc, char *argv[]) {
     char cpu[64], mem[64], wlan[64], clockbuf[128], status[512];
-    Display *display = XOpenDisplay(NULL);
-    if (!display) {
-        fprintf(stderr, "Cannot open display.\n");
-        return 1;
+    int to_stdout = 0;
+    Display *display = NULL;
+    Window root = 0;
+
+    if (argc == 2 && strcmp(argv[1], "-s") == 0) {
+        to_stdout = 1;
+    } else if (argc != 1) {
+        usage();
     }
-    Window root = DefaultRootWindow(display);
+    if (!to_stdout) {
+        display = XOpenDisplay(NULL);
+        if (!display) {
+            fprintf(stderr, "Cannot open display.\n");
+            return 1;
+        }
+        root = DefaultRootWindow(display);
+    }
     while (1) {
         get_cpu(cpu, sizeof(cpu));
         get_mem(mem, sizeof(mem));
@@ -96,9 +112,16 @@ int main() {
         get_clock(clockbuf, sizeof(clockbuf));
         snprintf(status, sizeof(status), " %s  %s  %s  %s ", cpu, mem, wlan, clockbuf);
 
-        // Update root window name
-        XStoreName(display, root, status);
-        XFlush(display);
+        if (to_stdout) {
+            // One line per update, read by the dwl bar on its standard input
+            if (printf("%s\n", status) < 0 || fflush(stdout) == EOF) {
+                return 1;
+            }
+        } else {
+            // Update root window name
+            XStoreName(display, root, status);
+            XFlush(display);
+        }
 
         sleep(1);
     }
